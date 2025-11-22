@@ -52,6 +52,7 @@ if (isset($_POST['submit'])) {
     <title>Edit Pengeluaran - CashIt</title>
 </head>
 <body>
+    <div class="content">
     <h1>Edit Pengeluaran</h1>
     <a href="index.php">Kembali</a>
     <br><br>
@@ -81,5 +82,6 @@ if (isset($_POST['submit'])) {
 
         <button type="submit" name="submit">Update</button>
     </form>
+    </div>
 </body>
 </html>

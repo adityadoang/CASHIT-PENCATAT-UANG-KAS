@@ -3,19 +3,23 @@ session_start();
 require_once "../config/db.php";
 
 if (isset($_POST['login'])) {
+
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $q = mysqli_query($conn, "SELECT * FROM admin_users WHERE username = '$username'");
-    $user = mysqli_fetch_assoc($q);
+    $query = mysqli_query($conn, "SELECT * FROM admin_users WHERE username='$username'");
+    $user = mysqli_fetch_assoc($query);
 
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['admin_id'] = $user['id'];
-        $_SESSION['admin_username'] = $user['username'];
-        header("Location: dashboard.php");
-        exit;
+    if (!$user) {
+        $error = "Username tidak ditemukan";
     } else {
-        $error = "Username atau password salah";
+        if ($password === $user['password']) {
+            $_SESSION['admin_id'] = $user['id'];
+            header("Location: dashboard.php");
+            exit;
+        } else {
+            $error = "Password salah";
+        }
     }
 }
 ?>
@@ -23,21 +27,29 @@ if (isset($_POST['login'])) {
 <html>
 <head>
     <title>Login CashIt</title>
+    <link rel="stylesheet" href="../assets/style.css">
+
 </head>
-<body>
-    <h1>Login Admin CashIt</h1>
+<body class="login-body">
+
+<div class="login-card">
+    <h2 class="login-title">CashIt System</h2>
+    <p class="login-subtitle">Masuk sebagai administrator</p>
+
     <?php if (isset($error)) : ?>
-        <p style="color:red"><?= $error; ?></p>
+        <div class="login-error"><?= $error; ?></div>
     <?php endif; ?>
 
     <form method="POST">
-        <label>Username</label><br>
-        <input type="text" name="username" required><br><br>
+        <label class="login-label">Username</label>
+        <input type="text" name="username" class="login-input" required>
 
-        <label>Password</label><br>
-        <input type="password" name="password" required><br><br>
+        <label class="login-label">Password</label>
+        <input type="password" name="password" class="login-input" required>
 
-        <button type="submit" name="login">Login</button>
+        <button type="submit" name="login" class="login-button">Masuk</button>
     </form>
+</div>
+
 </body>
 </html>

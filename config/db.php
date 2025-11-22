@@ -2,7 +2,7 @@
 $host = "localhost";
 $user = "root";
 $pass = "";
-$db   = "cashit";
+$db   = "cashit_db";
 
 $conn = mysqli_connect($host, $user, $pass, $db);
 

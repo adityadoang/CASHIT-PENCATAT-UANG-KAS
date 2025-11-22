@@ -7,19 +7,19 @@ if (!isset($_SESSION['admin_id'])) {
 
 require_once "../../config/db.php";
 
+// Proses Submit
 if (isset($_POST['submit'])) {
-    $tanggal    = $_POST['tanggal'];
-    $jenis      = $_POST['jenis'];
-    $nama_acara = $_POST['nama_acara'] ?: null;
-    $deskripsi  = $_POST['deskripsi'];
-    $jumlah     = $_POST['jumlah'];
+
+    $tanggal    = mysqli_real_escape_string($conn, $_POST['tanggal']);
+    $jenis      = mysqli_real_escape_string($conn, $_POST['jenis']);
+    $nama_acara = !empty($_POST['nama_acara']) ? "'" . mysqli_real_escape_string($conn, $_POST['nama_acara']) . "'" : "NULL";
+    $deskripsi  = mysqli_real_escape_string($conn, $_POST['deskripsi']);
+    $jumlah     = mysqli_real_escape_string($conn, $_POST['jumlah']);
 
     $sql = "INSERT INTO pengeluaran (tanggal, jenis, nama_acara, deskripsi, jumlah)
-            VALUES ('$tanggal', '$jenis', " . ($nama_acara ? "'$nama_acara'" : "NULL") . ", '$deskripsi', $jumlah)";
-    
-    $result = mysqli_query($conn, $sql);
+            VALUES ('$tanggal', '$jenis', $nama_acara, '$deskripsi', $jumlah)";
 
-    if ($result) {
+    if (mysqli_query($conn, $sql)) {
         header("Location: index.php");
         exit;
     } else {
@@ -28,39 +28,68 @@ if (isset($_POST['submit'])) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
     <title>Tambah Pengeluaran - CashIt</title>
+<link rel="stylesheet" href="../../assets/css/style.css">
+
 </head>
 <body>
-    <h1>Tambah Pengeluaran</h1>
-    <a href="index.php">Kembali</a>
-    <br><br>
 
-    <?php if (isset($error)) : ?>
-        <p style="color:red;"><?= $error; ?></p>
-    <?php endif; ?>
+<div class="create-wrapper">
 
-    <form method="POST">
-        <label>Tanggal</label><br>
-        <input type="date" name="tanggal" required><br><br>
+    <h2 class="create-title">Tambah Pengeluaran</h2>
 
-        <label>Jenis</label><br>
-        <select name="jenis" required>
-            <option value="umum">Umum</option>
-            <option value="acara">Acara</option>
-        </select><br><br>
+    <div class="create-top-actions">
+        <a href="index.php" class="btn-back-create">← Kembali</a>
+    </div>
 
-        <label>Nama Acara (opsional, isi kalau jenis = acara)</label><br>
-        <input type="text" name="nama_acara"><br><br>
+    <div class="create-card">
 
-        <label>Deskripsi</label><br>
-        <textarea name="deskripsi" rows="3"></textarea><br><br>
+        <?php if (isset($error)) : ?>
+            <p style="color:red; text-align:center;"><?= $error; ?></p>
+        <?php endif; ?>
 
-        <label>Jumlah (Rp)</label><br>
-        <input type="number" name="jumlah" required><br><br>
+        <form method="POST" class="create-form">
 
-        <button type="submit" name="submit">Simpan</button>
-    </form>
+            <div>
+                <label>Tanggal</label>
+                <input type="date" name="tanggal" required>
+            </div>
+
+            <div>
+                <label>Jenis Pengeluaran</label>
+                <select name="jenis" required>
+                    <option value="umum">Umum</option>
+                    <option value="acara">Acara</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Nama Acara (opsional jika jenis = acara)</label>
+                <input type="text" name="nama_acara" placeholder="Isi jika jenis acara">
+            </div>
+
+            <div>
+                <label>Deskripsi</label>
+                <textarea name="deskripsi" rows="3"></textarea>
+            </div>
+
+            <div>
+                <label>Jumlah (Rp)</label>
+                <input type="number" name="jumlah" required>
+            </div>
+
+            <button type="submit" name="submit" class="btn-submit-expense">
+                Simpan Pengeluaran
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
 </body>
 </html>

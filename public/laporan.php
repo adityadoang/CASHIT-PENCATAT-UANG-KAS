@@ -52,146 +52,120 @@ $q_pengeluaran_detil = mysqli_query($conn, "SELECT * FROM pengeluaran WHERE YEAR
 $saldo = $total_pemasukan - $total_pengeluaran;
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <title>Laporan Kas CashIt - Tahun <?= htmlspecialchars($tahun); ?></title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-        }
-        .container {
-            max-width: 1100px;
-            margin: 20px auto;
-            background: #fff;
-            padding: 20px 25px 40px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.08);
-        }
-        h1, h2, h3 {
-            margin-top: 0;
-        }
-        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-        th, td { border: 1px solid #333; padding: 6px; font-size: 14px; }
-        th { background-color: #f0f0f0; }
-        .center { text-align: center; }
-        .right { text-align: right; }
-        .badge {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            color: #fff;
-        }
-        .badge-umum { background: #6c757d; }
-        .badge-acara { background: #0d6efd; }
-        .summary-box {
-            background: #f8f9fa;
-            border-radius: 6px;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-        }
-    </style>
+    <!-- SESUAIKAN PATH JIKA PERLU -->
+    <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
-<div class="container">
-    <h1>Laporan Uang Kas - CashIt</h1>
-    <h3>Tahun: <?= htmlspecialchars($tahun); ?></h3>
 
-    <!-- form ganti tahun -->
-    <form method="GET" action="laporan.php">
-        <label>Pilih Tahun: </label>
-        <input type="number" name="tahun" value="<?= htmlspecialchars($tahun); ?>">
-        <button type="submit">Tampilkan</button>
-    </form>
+<div class="content">
 
-    <hr>
+    <!-- Judul Halaman -->
+    <h1 class="page-title">Laporan Uang Kas - CashIt</h1>
 
-    <h2>Ringkasan Kas</h2>
-    <div class="summary-box">
-        <p><strong>Nominal kas per bulan per mahasiswa:</strong> Rp <?= number_format($nominal_per_bulan, 0, ',', '.'); ?></p>
-        <p><strong>Total bulan terbayar (semua mahasiswa):</strong> <?= $total_bulan_terbayar; ?> bulan</p>
-        <p><strong>Total Pemasukan:</strong> Rp <?= number_format($total_pemasukan, 0, ',', '.'); ?></p>
-        <p><strong>Total Pengeluaran:</strong> Rp <?= number_format($total_pengeluaran, 0, ',', '.'); ?></p>
-        <p><strong>Saldo Akhir:</strong> Rp <?= number_format($saldo, 0, ',', '.'); ?></p>
-    </div>
 
-    <hr>
+    <!-- Filter Tahun (full width, tanpa card) -->
+    <section style="margin: 15px 0 25px 0;">
+        <h2 style="margin-bottom: 8px;">Tahun Laporan</h2>
+        <form method="GET" action="laporan.php" class="year-form">
+            <label for="tahun">Pilih Tahun:</label>
+            <input type="number" id="tahun" name="tahun" value="<?= htmlspecialchars($tahun); ?>">
+            <button type="submit">Tampilkan</button>
+        </form>
+    </section>
 
-    
+    <!-- Ringkasan Kas (full width) -->
+    <section style="margin-bottom: 25px;">
+        <h2 style="margin-bottom: 8px;">Ringkasan Kas Tahun <?= htmlspecialchars($tahun); ?></h2>
+        <p><strong>Nominal kas per bulan per mahasiswa:</strong>
+            Rp <?= number_format($nominal_per_bulan, 0, ',', '.'); ?></p>
+        <p><strong>Total bulan terbayar (semua mahasiswa):</strong>
+            <?= $total_bulan_terbayar; ?> bulan</p>
+        <p><strong>Total Pemasukan:</strong>
+            Rp <?= number_format($total_pemasukan, 0, ',', '.'); ?></p>
+        <p><strong>Total Pengeluaran:</strong>
+            Rp <?= number_format($total_pengeluaran, 0, ',', '.'); ?></p>
+        <p><strong>Saldo Akhir:</strong>
+            Rp <?= number_format($saldo, 0, ',', '.'); ?></p>
+    </section>
 
-    <h2>Status Iuran per Mahasiswa</h2>
-    <table>
-        <tr>
-            <th>NIM</th>
-            <th>Nama</th>
-            <th>Kelas</th>
-            <th>Jan</th>
-            <th>Feb</th>
-            <th>Mar</th>
-            <th>Apr</th>
-            <th>Mei</th>
-            <th>Jun</th>
-            <th>Jul</th>
-            <th>Ags</th>
-            <th>Sep</th>
-            <th>Okt</th>
-            <th>Nov</th>
-            <th>Des</th>
-            <th>Jumlah Bulan Lunas</th>
-        </tr>
-        <?php foreach ($data_mahasiswa as $m) : ?>
-        <tr>
-            <td><?= htmlspecialchars($m['nim']); ?></td>
-            <td><?= htmlspecialchars($m['nama']); ?></td>
-            <td class="center"><?= htmlspecialchars($m['kelas']); ?></td>
-            <?php foreach ($bulan as $b) : ?>
-                <td class="center">
-                    <?= !empty($m[$b]) ? '✔' : '-' ?>
-                </td>
+    <!-- Status Iuran per Mahasiswa (full width table) -->
+    <section style="margin-bottom: 30px;">
+        <h2 style="margin-bottom: 10px;">Status Iuran per Mahasiswa</h2>
+        <table class="iuran-table">
+            <tr>
+                <th>NIM</th>
+                <th>Nama</th>
+                <th>Kelas</th>
+                <th>Jan</th>
+                <th>Feb</th>
+                <th>Mar</th>
+                <th>Apr</th>
+                <th>Mei</th>
+                <th>Jun</th>
+                <th>Jul</th>
+                <th>Ags</th>
+                <th>Sep</th>
+                <th>Okt</th>
+                <th>Nov</th>
+                <th>Des</th>
+                <th>Jumlah Bulan Lunas</th>
+            </tr>
+            <?php foreach ($data_mahasiswa as $m) : ?>
+                <tr>
+                    <td><?= htmlspecialchars($m['nim']); ?></td>
+                    <td><?= htmlspecialchars($m['nama']); ?></td>
+                    <td><?= htmlspecialchars($m['kelas']); ?></td>
+                    <?php foreach ($bulan as $b) : ?>
+                        <td>
+                            <?= !empty($m[$b]) ? '✔' : '-' ?>
+                        </td>
+                    <?php endforeach; ?>
+                    <td><?= $m['paid_count']; ?></td>
+                </tr>
             <?php endforeach; ?>
-            <td class="center"><?= $m['paid_count']; ?></td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
-    <!-- 🔻 BAGIAN BARU: RINCIAN PENGELUARAN -->
-    <h2>Rincian Pengeluaran</h2>
-    <?php if (mysqli_num_rows($q_pengeluaran_detil) > 0) : ?>
-        <table>
-            <tr>
-                <th>No</th>
-                <th>Tanggal</th>
-                <th>Jenis</th>
-                <th>Nama Acara</th>
-                <th>Deskripsi</th>
-                <th>Jumlah</th>
-            </tr>
-            <?php
-            $no = 1;
-            while ($p = mysqli_fetch_assoc($q_pengeluaran_detil)) :
-            ?>
-            <tr>
-                <td class="center"><?= $no++; ?></td>
-                <td class="center"><?= htmlspecialchars($p['tanggal']); ?></td>
-                <td class="center">
-                    <?php if ($p['jenis'] == 'acara') : ?>
-                        <span class="badge badge-acara">Acara</span>
-                    <?php else : ?>
-                        <span class="badge badge-umum">Umum</span>
-                    <?php endif; ?>
-                </td>
-                <td><?= htmlspecialchars($p['nama_acara']); ?></td>
-                <td><?= nl2br(htmlspecialchars($p['deskripsi'])); ?></td>
-                <td class="right">Rp <?= number_format($p['jumlah'], 0, ',', '.'); ?></td>
-            </tr>
-            <?php endwhile; ?>
         </table>
-    <?php else : ?>
-        <p><em>Belum ada pengeluaran yang tercatat di tahun ini.</em></p>
-    <?php endif; ?>
+    </section>
 
-    <hr>
+    <!-- Rincian Pengeluaran (full width table) -->
+    <section style="margin-bottom: 20px;">
+        <h2 style="margin-bottom: 10px;">Rincian Pengeluaran</h2>
+
+        <?php if (mysqli_num_rows($q_pengeluaran_detil) > 0) : ?>
+            <table class="expense-table">
+                <tr>
+                    <th>No</th>
+                    <th>Tanggal</th>
+                    <th>Jenis</th>
+                    <th>Nama Acara</th>
+                    <th>Deskripsi</th>
+                    <th>Jumlah</th>
+                </tr>
+                <?php
+                $no = 1;
+                while ($p = mysqli_fetch_assoc($q_pengeluaran_detil)) :
+                ?>
+                    <tr>
+                        <td><?= $no++; ?></td>
+                        <td><?= htmlspecialchars($p['tanggal']); ?></td>
+                        <td>
+                            <?= ($p['jenis'] === 'acara') ? 'Acara' : 'Umum'; ?>
+                        </td>
+                        <td><?= htmlspecialchars($p['nama_acara']); ?></td>
+                        <td><?= nl2br(htmlspecialchars($p['deskripsi'])); ?></td>
+                        <td>Rp <?= number_format($p['jumlah'], 0, ',', '.'); ?></td>
+                    </tr>
+                <?php endwhile; ?>
+            </table>
+        <?php else : ?>
+            <p><em>Belum ada pengeluaran yang tercatat di tahun ini.</em></p>
+        <?php endif; ?>
+    </section>
+
 </div>
+
 </body>
 </html>

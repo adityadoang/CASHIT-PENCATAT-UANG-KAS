@@ -25,26 +25,40 @@ $result = mysqli_query($conn, $sql);
 <html>
 <head>
     <title>Status Iuran Kas - CashIt</title>
+    <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
-    <h1>Status Iuran Kas Tahun <?= htmlspecialchars($tahun); ?></h1>
-    <a href="../dashboard.php">Kembali ke Dashboard</a>
-    <br><br>
+<div class="sidebar">
+    <h2>CashIt</h2>
 
-    <!-- Form pilih tahun (optional) -->
-    <form method="GET" action="index.php">
-        <label>Pilih Tahun: </label>
+    <a href="../dashboard.php">Dashboard</a>
+    <a href="../mahasiswa/index.php">Kelola Mahasiswa</a>
+    <a href="../iuran/index.php">Status Iuran</a>
+    <a href="../pengeluaran/index.php">Pengeluaran</a>
+
+    <a href="../logout.php" class="logout">Logout</a>
+</div>
+
+
+
+<div class="content">
+
+    <h1 class="page-title">Status Iuran Kas Tahun <?= htmlspecialchars($tahun); ?></h1>
+
+    <a href="../dashboard.php" class="btn btn-back">← Kembali ke Dashboard</a>
+
+    <!-- Form pilih tahun -->
+    <form method="GET" action="index.php" class="year-form">
+        <label>Pilih Tahun:</label>
         <input type="number" name="tahun" value="<?= htmlspecialchars($tahun); ?>">
         <button type="submit">Ganti Tahun</button>
     </form>
 
-    <br>
-
+    <div class="iuran-card">
     <form method="POST" action="update_iuran.php">
-        <!-- kirim tahun ke proses -->
         <input type="hidden" name="tahun" value="<?= htmlspecialchars($tahun); ?>">
 
-        <table border="1" cellpadding="5">
+        <table class="iuran-table">
             <tr>
                 <th>NIM</th>
                 <th>Nama</th>
@@ -62,9 +76,10 @@ $result = mysqli_query($conn, $sql);
                 <th>Nov</th>
                 <th>Des</th>
             </tr>
+
             <?php
             $bulan = ['jan','feb','mar','apr','mei','jun','jul','ags','sep','okt','nov','des'];
-            while ($row = mysqli_fetch_assoc($result)) :
+            while ($row = mysqli_fetch_assoc($result)):
                 $id_mhs = $row['id'];
             ?>
             <tr>
@@ -72,10 +87,9 @@ $result = mysqli_query($conn, $sql);
                 <td><?= htmlspecialchars($row['nama']); ?></td>
                 <td><?= htmlspecialchars($row['kelas']); ?></td>
 
-                <!-- hidden untuk pastikan id mahasiswa selalu terkirim -->
                 <input type="hidden" name="mahasiswa_ids[]" value="<?= $id_mhs; ?>">
 
-                <?php foreach ($bulan as $b) : 
+                <?php foreach ($bulan as $b):
                     $checked = !empty($row[$b]) ? 'checked' : '';
                 ?>
                     <td style="text-align:center;">
@@ -84,9 +98,14 @@ $result = mysqli_query($conn, $sql);
                 <?php endforeach; ?>
             </tr>
             <?php endwhile; ?>
+
         </table>
-        <br>
-        <button type="submit">Simpan Perubahan</button>
+
+        <button type="submit" class="save-btn">Simpan Perubahan</button>
     </form>
+    </div>
+
+</div>
+
 </body>
 </html>

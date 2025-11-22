@@ -24,18 +24,16 @@ if (!$mahasiswa) {
 
 // 3. Jika form disubmit → update data
 if (isset($_POST['submit'])) {
-    $nim      = $_POST['nim'];
     $nama     = $_POST['nama'];
+    $nim      = $_POST['nim'];
     $kelas    = $_POST['kelas'];
     $angkatan = $_POST['angkatan'];
-    $email    = $_POST['email'];
 
     $sql = "UPDATE mahasiswa 
-            SET nim = '$nim',
-                nama = '$nama',
+            SET nama = '$nama',
+                nim = '$nim',
                 kelas = '$kelas',
-                angkatan = '$angkatan',
-                email = '$email'
+                angkatan = '$angkatan'
             WHERE id = $id";
 
     $result = mysqli_query($conn, $sql);
@@ -52,32 +50,51 @@ if (isset($_POST['submit'])) {
 <html>
 <head>
     <title>Edit Mahasiswa - CashIt</title>
+
+    <!-- Tambahkan CSS -->
+<link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
-    <h1>Edit Mahasiswa</h1>
-    <a href="index.php">Kembali</a><br><br>
+
+<div class="content">
+
+    <h1 class="page-title">Edit Data Mahasiswa</h1>
+
+    <div class="top-menu">
+        <a href="index.php" class="btn btn-back">← Kembali</a>
+    </div>
 
     <?php if (isset($error)) : ?>
-        <p style="color:red"><?= $error; ?></p>
+        <div class="error"><?= $error; ?></div>
     <?php endif; ?>
 
-    <form method="POST">
-        <label>NIM</label><br>
-        <input type="text" name="nim" value="<?= $mahasiswa['nim']; ?>" required><br><br>
+    <div class="table-card">
 
-        <label>Nama</label><br>
-        <input type="text" name="nama" value="<?= $mahasiswa['nama']; ?>" required><br><br>
+        <form method="POST">
 
-        <label>Kelas</label><br>
-        <input type="text" name="kelas" value="<?= $mahasiswa['kelas']; ?>" required><br><br>
+            <label>NIM</label>
+            <input type="text" name="nim" value="<?= $mahasiswa['nim']; ?>" required>
 
-        <label>Angkatan</label><br>
-        <input type="number" name="angkatan" value="<?= $mahasiswa['angkatan']; ?>" required><br><br>
+            <label>Nama</label>
+            <input type="text" name="nama" value="<?= $mahasiswa['nama']; ?>" required>
 
-        <label>Email</label><br>
-        <input type="email" name="email" value="<?= $mahasiswa['email']; ?>"><br><br>
+            <label>Kelas</label>
+            <input type="text" name="kelas" value="<?= $mahasiswa['kelas']; ?>" required>
 
-        <button type="submit" name="submit">Update</button>
-    </form>
+            <label>Angkatan</label>
+            <input type="number" name="angkatan" value="<?= $mahasiswa['angkatan']; ?>" required>
+
+
+
+            <button type="submit" name="submit" class="btn btn-add" style="margin-top:15px;">
+                Update
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
 </body>
 </html>
