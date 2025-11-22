@@ -34,20 +34,6 @@ if (isset($_POST['submit'])) {
     $id_mahasiswa = $stmt->insert_id;
     $stmt->close();
 
-    // Insert iuran awal jika ada
-    if ($jumlah_iuran > 0) {
-        $stmt_iuran = $conn->prepare("
-            INSERT INTO iuran_kas (id_mahasiswa, jumlah, tanggal)
-            VALUES (?, ?, CURDATE())
-        ");
-        $stmt_iuran->bind_param("id", $id_mahasiswa, $jumlah_iuran);
-
-        if (!$stmt_iuran->execute()) {
-            die("Error insert iuran: " . $stmt_iuran->error);
-        }
-
-        $stmt_iuran->close();
-    }
 
     header("Location: index.php");
     exit;
